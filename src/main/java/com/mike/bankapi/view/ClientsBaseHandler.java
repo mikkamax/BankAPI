@@ -59,11 +59,10 @@ public class ClientsBaseHandler implements HttpHandler {
         }
 
         try {
-            OutputStream os = null;
             byte[] bytes = sb.toString().getBytes(StandardCharsets.UTF_8);
             exchange.getResponseHeaders().set("Content-Type", "application/json; charset=" + StandardCharsets.UTF_8);
             exchange.sendResponseHeaders(200, bytes.length);
-            os = exchange.getResponseBody();
+            OutputStream os = exchange.getResponseBody();
             os.write(bytes);
             os.flush();
             os.close();

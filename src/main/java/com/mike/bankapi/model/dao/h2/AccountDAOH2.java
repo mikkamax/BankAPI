@@ -33,8 +33,9 @@ public class AccountDAOH2 implements AccountDAO {
             resultSet.next();
             return resultSet.getLong("_id");
         } catch (SQLException e) {
-            Utils.printMessage("Ошибка при добавлении нового счета");
-            throw new DAOException("Ошибка при добавлении нового счета", e);
+            String error = "Ошибка при добавлении нового счета";
+            Utils.printMessage(error);
+            throw new DAOException(error, e);
         }
     }
 
@@ -55,8 +56,9 @@ public class AccountDAOH2 implements AccountDAO {
 
             return list;
         } catch (SQLException e) {
-            Utils.printMessage("Ошибка! Не удалось получить все счета клиента");
-            throw new DAOException("Ошибка! Не удалось получить все счета клиента", e);
+            String error = "Ошибка! Не удалось получить все счета клиента";
+            Utils.printMessage(error);
+            throw new DAOException(error, e);
         }
     }
 
@@ -74,8 +76,29 @@ public class AccountDAOH2 implements AccountDAO {
 
             return getAccountFromResultSet(resultSet);
         } catch (SQLException e) {
-            Utils.printMessage("Ошибка! Не удалось получить счет по Id");
-            throw new DAOException("Ошибка! Не удалось получить счет по Id", e);
+            String error = "Ошибка! Не удалось получить счет по Id";
+            Utils.printMessage(error);
+            throw new DAOException(error, e);
+        }
+    }
+
+    @Override
+    public boolean isAccountExists(String number) throws DAOException {
+        String isAccountExistsSql = "SELECT COUNT(*) FROM account WHERE number = ?;";
+
+        try (Connection connection = daoFactory.getConnection();
+             PreparedStatement pStatement = connection.prepareStatement(isAccountExistsSql)) {
+            pStatement.setString(1, number);
+            pStatement.execute();
+
+            ResultSet resultSet = pStatement.getResultSet();
+            resultSet.next();
+
+            return resultSet.getInt(1) > 0;
+        } catch (SQLException e) {
+            String error = "Ошибка! Запрос на существование счета в БД не выполнен";
+            Utils.printMessage(error);
+            throw new DAOException(error, e);
         }
     }
 
@@ -92,8 +115,9 @@ public class AccountDAOH2 implements AccountDAO {
             boolean result = pStatement.executeUpdate() == 1 ? true : false;
             return result;
         } catch (SQLException e) {
-            Utils.printMessage("Ошибка при добавлении средств на счет");
-            throw new DAOException("Ошибка при добавлении средств на счет", e);
+            String error = "Ошибка при добавлении средств на счет";
+            Utils.printMessage(error);
+            throw new DAOException(error, e);
         }
     }
 

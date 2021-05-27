@@ -31,8 +31,9 @@ public class HttpWebServer {
 //        ThreadPoolExecutor threadPoolExecutor = (ThreadPoolExecutor) Executors.newFixedThreadPool(5);
 //        httpServer.setExecutor(threadPoolExecutor);
         } catch (IOException e) {
-            Utils.printMessage("Ошибка инициализации веб-сервера");
-            throw new ServiceException("Ошибка инициализации веб-сервера", e);
+            String error = "Ошибка инициализации веб-сервера";
+            Utils.printMessage(error);
+            throw new ServiceException(error, e);
         }
 
     }

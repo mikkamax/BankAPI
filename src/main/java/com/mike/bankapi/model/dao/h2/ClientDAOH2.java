@@ -34,8 +34,9 @@ public class ClientDAOH2 implements ClientDAO {
 
             return list;
         } catch (SQLException e) {
-            Utils.printMessage("Ошибка! Не удалось получить список всех клиентов");
-            throw new DAOException("Ошибка! Не удалось получить список всех клиентов", e);
+            String error = "Ошибка! Не удалось получить список всех клиентов";
+            Utils.printMessage(error);
+            throw new DAOException(error, e);
         }
     }
 
@@ -59,8 +60,9 @@ public class ClientDAOH2 implements ClientDAO {
 
             return cardList;
         } catch (SQLException e) {
-            Utils.printMessage("Ошибка! Не удалось получить карты по Id клиента");
-            throw new DAOException("Ошибка! Не удалось получить карты по Id клиента", e);
+            String error = "Ошибка! Не удалось получить карты по Id клиента";
+            Utils.printMessage(error);
+            throw new DAOException(error, e);
         }
     }
 
@@ -78,8 +80,9 @@ public class ClientDAOH2 implements ClientDAO {
 
             return getClientFromResultSet(resultSet);
         } catch (SQLException e) {
-            Utils.printMessage("Ошибка! Не удалось получить клиента по Id");
-            throw new DAOException("Ошибка! Не удалось получить клиента по Id", e);
+            String error = "Ошибка! Не удалось получить клиента по Id";
+            Utils.printMessage(error);
+            throw new DAOException(error, e);
         }
     }
 

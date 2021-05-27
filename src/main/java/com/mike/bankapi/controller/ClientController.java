@@ -1,6 +1,5 @@
 package com.mike.bankapi.controller;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.mike.bankapi.model.dao.*;
 import com.mike.bankapi.model.entity.Account;
 import com.mike.bankapi.model.entity.Card;
@@ -15,7 +14,6 @@ public class ClientController {
     private final ClientDAO clientDAO;
     private final AccountDAO accountDAO;
     private final CardDAO cardDAO;
-    private final ObjectMapper objectMapper = new ObjectMapper();
 
     public ClientController(DAOFactory daoFactory) {
         this.daoFactory = daoFactory;
@@ -29,7 +27,7 @@ public class ClientController {
     }
 
     public List<Card> getAllClientCards(long clientId) throws DAOException {
-        clientDAO.getClientById(clientId); //неумная проверка что клиент с таким id существует
+        clientDAO.getClientById(clientId); //проверка что клиент существует с выбросом exception
         return clientDAO.getAllClientCards(clientId);
     }
 
@@ -37,18 +35,27 @@ public class ClientController {
         return accountDAO.getAccountById(accountId);
     }
 
+    public Card getCardById(long cardId) throws DAOException {
+        return cardDAO.getCardById(cardId);
+    }
+
     public boolean addFundsToAccount(long accountId, BigDecimal funds) throws DAOException {
         return accountDAO.addFundsToAccount(accountId, funds);
     }
 
     public List<Card> getAllAccountCards(long accountId) throws DAOException {
+        accountDAO.getAccountById(accountId); //проверка что счет существует с выбросом exception
         return cardDAO.getAllCardsByAccountId(accountId);
     }
 
     public long createNewAccount(long clientId) throws DAOException {
-        clientDAO.getClientById(clientId); //неумная проверка что клиент с таким id существует
+        clientDAO.getClientById(clientId); //проверка что клиент существует с выбросом exception
 
-        String number = Utils.generateNewNumber(20);
+        String number;
+
+        do {
+            number = Utils.generateNewNumber(20);
+        } while (accountDAO.isAccountExists(number));
 
         Account account = new Account();
         account.setClientId(clientId);
@@ -63,14 +70,17 @@ public class ClientController {
             accountId = createNewAccount(clientId);
         }
 
-        Account account = accountDAO.getAccountById(accountId); //неумная проверка что клиент с таким id существует
+        Account account = accountDAO.getAccountById(accountId); //проверка что клиент существует с выбросом exception
         if (account.getClientId() != clientId) {
             String error = "Переданный id счета не соответствует переданному id клиента";
             Utils.printMessage(error);
             throw new DAOException(error);
         }
 
-        String number = Utils.generateNewNumber(16);
+        String number;
+        do {
+            number = Utils.generateNewNumber(16);
+        } while (cardDAO.isCardExists(number));
 
         Card card = new Card();
         card.setAccountId(accountId);

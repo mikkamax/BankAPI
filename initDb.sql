@@ -12,14 +12,14 @@ CREATE TABLE client (
 CREATE TABLE account (
     _id BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
     client_id INT NOT NULL,
-    number VARCHAR(20) NOT NULL,
+    number VARCHAR(20) NOT NULL UNIQUE,
     balance DECIMAL NOT NULL
 );
 
 CREATE TABLE card (
     _id BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
     account_id INT NOT NULL,
-    card_number VARCHAR(16) NOT NULL,
+    card_number VARCHAR(16) NOT NULL UNIQUE,
     daily_limit DECIMAL DEFAULT NULL
 );
 

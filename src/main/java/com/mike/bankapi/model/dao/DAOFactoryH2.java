@@ -23,7 +23,7 @@ public class DAOFactoryH2 extends DAOFactory {
     public DAOFactoryH2() throws DAOException {
         jdbcConPool = JdbcConnectionPool.create(DB_URL, DB_USERNAME, DB_PASSWORD);
         //тестовый сервер для доступа к базе
-        startTcpServer();
+        //startTcpServer();
     }
 
     @Override
