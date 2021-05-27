@@ -22,6 +22,11 @@ public class ClientsNewCardHandler extends ClientsBaseHandler {
         try {
             StringBuilder sb = new StringBuilder();
 
+            if (!jsonNode.has("client_id") || !jsonNode.has("account_id") || !jsonNode.has("card_limit")) {
+                String error = "Ошибка! Недостаточно входящих данных для обработки POST-запроса";
+                Utils.printMessage(error);
+                throw new HandlerException(error);
+            }
             long clientId = jsonNode.get("client_id").asLong();
             long accountId = jsonNode.get("account_id").asLong();
             BigDecimal limit = new BigDecimal(jsonNode.get("card_limit").asText());

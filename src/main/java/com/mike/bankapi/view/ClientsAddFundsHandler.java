@@ -22,6 +22,12 @@ public class ClientsAddFundsHandler extends ClientsBaseHandler {
         try {
             StringBuilder sb = new StringBuilder();
 
+            if (!jsonNode.has("account_id") || !jsonNode.has("funds")) {
+                String error = "Ошибка! Недостаточно входящих данных для обработки POST-запроса";
+                Utils.printMessage(error);
+                throw new HandlerException(error);
+            }
+
             long accountId = jsonNode.get("account_id").asLong();
             BigDecimal fundsToAdd = new BigDecimal(jsonNode.get("funds").asText());
             boolean result = clientController.addFundsToAccount(accountId, fundsToAdd);

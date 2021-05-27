@@ -31,8 +31,7 @@ public class ClientsBaseHandler implements HttpHandler {
 
         try {
             if (exchange.getRequestMethod().equals("GET")) {
-                String query = exchange.getRequestURI().getQuery();
-                Map<String, String> queryParams = (query != null) ? queryToMap(exchange.getRequestURI().getQuery()) : new HashMap<>();
+                Map<String, String> queryParams = queryToMap(exchange.getRequestURI().getQuery());
                 sb = handleGetRequest(exchange, queryParams, mapper);
             } else if (exchange.getRequestMethod().equals("POST")) {
                 try {
@@ -85,10 +84,14 @@ public class ClientsBaseHandler implements HttpHandler {
 
     private Map<String, String> queryToMap(String query) {
         Map<String, String> queryMap = new HashMap<>();
-        String[] queries = query.split("&");
-        for (String que : queries) {
-            int dividerIndex = que.indexOf("=");
-            queryMap.put(que.substring(0, dividerIndex), que.substring(dividerIndex + 1));
+        if (query != null) {
+            String[] queries = query.split("&");
+            for (String que : queries) {
+                int dividerIndex = que.indexOf("=");
+                if (dividerIndex != -1) {
+                    queryMap.put(que.substring(0, dividerIndex), que.substring(dividerIndex + 1));
+                }
+            }
         }
         return queryMap;
     }

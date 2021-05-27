@@ -8,9 +8,9 @@ import java.io.IOException;
 import java.net.InetSocketAddress;
 
 public class HttpWebServer {
-    private final static String SERVER_HOSTNAME = "localhost";
-    private final static int SERVER_PORT = 8090;
-    private final static int SERVER_QUEUE = 0;
+    public final static String SERVER_HOSTNAME = "localhost";
+    public final static int SERVER_PORT = 8090;
+    public final static int SERVER_QUEUE = 0;
 
     private ClientController clientController;
     private HttpServer httpServer;
