@@ -8,15 +8,17 @@ import com.mike.bankapi.model.entity.Account;
 import com.mike.bankapi.service.Utils;
 import com.sun.net.httpserver.HttpExchange;
 
+import java.util.Map;
+
 public class ClientsBalanceHandler extends ClientsBaseHandler {
     public ClientsBalanceHandler(ClientController clientController) {
         super(clientController);
     }
 
     @Override
-    protected StringBuilder handleGetRequest(HttpExchange exchange, String query, ObjectMapper mapper) throws HandlerException, DAOException {
+    protected StringBuilder handleGetRequest(HttpExchange exchange, Map<String, String> queryParams, ObjectMapper mapper) throws HandlerException, DAOException {
         try {
-            long incomingLong = Long.parseLong(query.substring(query.lastIndexOf('/') + 1));
+            long incomingLong = Long.parseLong(queryParams.get("account_id"));
             StringBuilder sb = new StringBuilder();
             Account account = clientController.getAccountById(incomingLong);
             sb.append(mapper.writeValueAsString(account));

@@ -12,6 +12,8 @@ import com.sun.net.httpserver.HttpHandler;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.nio.charset.StandardCharsets;
+import java.util.HashMap;
+import java.util.Map;
 
 public class ClientsBaseHandler implements HttpHandler {
     protected ClientController clientController;
@@ -22,20 +24,16 @@ public class ClientsBaseHandler implements HttpHandler {
 
     @Override
     public void handle(HttpExchange exchange) {
-        StringBuilder sb = null;
+        StringBuilder sb;
         ObjectMapper mapper = new ObjectMapper();
         mapper.enable(SerializationFeature.INDENT_OUTPUT);
         mapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
 
         try {
             if (exchange.getRequestMethod().equals("GET")) {
-                String query = exchange.getRequestURI().toString();
-
-                if (query.charAt(query.length() - 1) == '/') {
-                    query = query.substring(0, query.length() - 1).toLowerCase();
-                }
-
-                sb = handleGetRequest(exchange, query, mapper);
+                String query = exchange.getRequestURI().getQuery();
+                Map<String, String> queryParams = (query != null) ? queryToMap(exchange.getRequestURI().getQuery()) : new HashMap<>();
+                sb = handleGetRequest(exchange, queryParams, mapper);
             } else if (exchange.getRequestMethod().equals("POST")) {
                 try {
                     JsonNode jsonNode = new ObjectMapper().readTree(exchange.getRequestBody());
@@ -45,6 +43,8 @@ public class ClientsBaseHandler implements HttpHandler {
                     Utils.printMessage(error);
                     throw new HandlerException(error, e);
                 }
+            } else {
+                throw new HandlerException("В текущей версии API поддерживаются только POST и GET запросы");
             }
         } catch (HandlerException|DAOException e) {
             e.printStackTrace();
@@ -73,7 +73,7 @@ public class ClientsBaseHandler implements HttpHandler {
         }
     }
 
-    protected StringBuilder handleGetRequest(HttpExchange exchange, String query, ObjectMapper mapper) throws HandlerException, DAOException {
+    protected StringBuilder handleGetRequest(HttpExchange exchange, Map<String, String> queryParams, ObjectMapper mapper) throws HandlerException, DAOException {
         String error = "Этот API не принимает GET-запросы";
         throw new HandlerException(error);
     }
@@ -81,5 +81,15 @@ public class ClientsBaseHandler implements HttpHandler {
     protected StringBuilder handlePostRequest(HttpExchange exchange, JsonNode jsonNode, ObjectMapper mapper) throws HandlerException, DAOException {
         String error = "Этот API не принимает POST-запросы";
         throw new HandlerException(error);
+    }
+
+    private Map<String, String> queryToMap(String query) {
+        Map<String, String> queryMap = new HashMap<>();
+        String[] queries = query.split("&");
+        for (String que : queries) {
+            int dividerIndex = que.indexOf("=");
+            queryMap.put(que.substring(0, dividerIndex), que.substring(dividerIndex + 1));
+        }
+        return queryMap;
     }
 }

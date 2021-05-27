@@ -9,6 +9,7 @@ import com.mike.bankapi.service.Utils;
 import com.sun.net.httpserver.HttpExchange;
 
 import java.util.List;
+import java.util.Map;
 
 public class ClientsCardsHandler extends ClientsBaseHandler {
     public ClientsCardsHandler(ClientController clientController) {
@@ -16,9 +17,9 @@ public class ClientsCardsHandler extends ClientsBaseHandler {
     }
 
     @Override
-    protected StringBuilder handleGetRequest(HttpExchange exchange, String query, ObjectMapper mapper) throws HandlerException, DAOException {
+    protected StringBuilder handleGetRequest(HttpExchange exchange, Map<String, String> queryParams, ObjectMapper mapper) throws HandlerException, DAOException {
         try {
-            long incomingLong = Long.parseLong(query.substring(query.lastIndexOf('/') + 1));
+            long incomingLong = Long.parseLong(queryParams.get("client_id"));
             StringBuilder sb = new StringBuilder();
             List<Card> cardList = clientController.getAllClientCards(incomingLong);
             sb.append(mapper.writeValueAsString(cardList));

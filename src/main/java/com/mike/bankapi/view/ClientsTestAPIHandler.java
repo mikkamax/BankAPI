@@ -9,6 +9,7 @@ import com.mike.bankapi.service.Utils;
 import com.sun.net.httpserver.HttpExchange;
 
 import java.util.List;
+import java.util.Map;
 
 public class ClientsTestAPIHandler extends ClientsBaseHandler {
     public ClientsTestAPIHandler(ClientController clientController) {
@@ -16,7 +17,7 @@ public class ClientsTestAPIHandler extends ClientsBaseHandler {
     }
 
     @Override
-    protected StringBuilder handleGetRequest(HttpExchange exchange, String query, ObjectMapper mapper) throws HandlerException, DAOException {
+    protected StringBuilder handleGetRequest(HttpExchange exchange, Map<String, String> queryParams, ObjectMapper mapper) throws HandlerException, DAOException {
         try {
             StringBuilder sb = new StringBuilder();
             List<Client> clientList = clientController.getAllData();
