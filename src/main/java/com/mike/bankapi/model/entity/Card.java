@@ -3,6 +3,9 @@ package com.mike.bankapi.model.entity;
 import java.math.BigDecimal;
 import java.util.Objects;
 
+/**
+ * Класс карты клиента, переменная cardId не участвует в equals и hashcode
+ */
 public class Card {
     private long cardId;
     private long accountId;

@@ -4,6 +4,9 @@ import java.sql.Date;
 import java.util.List;
 import java.util.Objects;
 
+/**
+ * Класс клиента, переменные clientId и accountList не участвуют в equals и hashcode
+ */
 public class Client {
     private long clientId;
     private String lastName;

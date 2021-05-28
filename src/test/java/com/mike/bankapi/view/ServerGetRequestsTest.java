@@ -19,6 +19,7 @@ import java.net.URLConnection;
 
 public class ServerGetRequestsTest {
     public static String urlMain = "http://" + HttpWebServer.SERVER_HOSTNAME + ":" + HttpWebServer.SERVER_PORT;
+    public static String urlClients = urlMain + "/clients/";
     public static String urlCards = urlMain + "/clients/cards/";
     public static String urlBalance = urlMain + "/clients/balance/";
 
@@ -44,6 +45,17 @@ public class ServerGetRequestsTest {
     @AfterClass
     public static void after() {
         httpWebServer.stop();
+    }
+
+    @Test
+    public void getClientWithAllData() throws IOException, DAOException {
+        String url = urlClients + "?client_id=7";
+        JsonNode actual = actualResponse(url);
+
+        String expectedString = "{\"clientId\":7,\"lastName\":\"Ситников\",\"firstName\":\"Алексей\",\"middleName\":\"Агафонович\",\"dateOfBirth\":\"1951-03-10\",\"passportNum\":\"4087399807\",\"accountList\":[{\"accountId\":8,\"clientId\":7,\"number\":\"50443335500000009240\",\"balance\":326780.40,\"cardList\":[{\"cardId\":6,\"accountId\":8,\"cardNumber\":\"5470487992351756\",\"dailyLimit\":0.00}]}]}";
+        JsonNode expected = mapper.readTree(expectedString);
+
+        Assert.assertEquals(expected, actual);
     }
 
     @Test

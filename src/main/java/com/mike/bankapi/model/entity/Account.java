@@ -4,6 +4,9 @@ import java.math.BigDecimal;
 import java.util.List;
 import java.util.Objects;
 
+/**
+ * Класс счета клиента, переменные accountId и cardList не участвуют в equals и hashcode
+ */
 public class Account {
     private long accountId;
     private long clientId;

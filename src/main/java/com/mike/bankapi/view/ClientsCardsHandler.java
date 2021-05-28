@@ -11,6 +11,9 @@ import com.sun.net.httpserver.HttpExchange;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * Хэндлер, обрабатывающий GET-запросы по выводу списка всех карт клиента
+ */
 public class ClientsCardsHandler extends ClientsBaseHandler {
     public ClientsCardsHandler(ClientController clientController) {
         super(clientController);

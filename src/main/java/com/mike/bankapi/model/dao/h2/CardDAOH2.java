@@ -104,6 +104,12 @@ public class CardDAOH2 implements CardDAO {
         }
     }
 
+    /**
+     * Парсинг ResultSet для получения Card
+     * @param rs с наведенным на строку указателем
+     * @return объект Card
+     * @throws SQLException
+     */
     private Card getCardFromResultSet(ResultSet rs) throws SQLException {
         Card card = new Card();
         card.setCardId(rs.getLong("_id"));

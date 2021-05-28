@@ -10,6 +10,9 @@ import com.sun.net.httpserver.HttpExchange;
 
 import java.util.Map;
 
+/**
+ * Хэндлер, обрабатывающий GET-запросы по проверке баланса счета
+ */
 public class ClientsBalanceHandler extends ClientsBaseHandler {
     public ClientsBalanceHandler(ClientController clientController) {
         super(clientController);

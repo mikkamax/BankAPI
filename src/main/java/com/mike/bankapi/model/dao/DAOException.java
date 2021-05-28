@@ -1,5 +1,8 @@
 package com.mike.bankapi.model.dao;
 
+/**
+ * Exception-обертка для всех исключений, возникающих в слое DAO
+ */
 public class DAOException extends Exception {
     public DAOException() {
         super();

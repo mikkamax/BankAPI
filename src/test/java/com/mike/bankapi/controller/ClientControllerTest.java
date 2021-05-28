@@ -203,6 +203,32 @@ public class ClientControllerTest {
     }
 
     @Test
+    public void getAllClientDataById() throws DAOException {
+        Client actualClient = clientController.getAllClientDataById(7);
+
+        Client expectedClient = new Client();
+        expectedClient.setLastName("Ситников");
+        expectedClient.setFirstName("Алексей");
+        expectedClient.setMiddleName("Агафонович");
+        expectedClient.setDateOfBirth(Date.valueOf(LocalDate.of(1951, 03, 10)));
+        expectedClient.setPassportNum("4087399807");
+
+        Account account = new Account();
+        account.setClientId(7);
+        account.setNumber("50443335500000009240");
+        account.setBalance(new BigDecimal("326780.40"));
+
+        Card card = new Card();
+        card.setAccountId(8);
+        card.setCardNumber("5470487992351756");
+        card.setDailyLimit(new BigDecimal("0.00"));
+
+        assertEquals(expectedClient, actualClient);
+        assertEquals(account, actualClient.getAccountList().get(0));
+        assertEquals(card, actualClient.getAccountList().get(0).getCardList().get(0));
+    }
+
+    @Test
     public void getAllData() throws DAOException {
         List<Client> clientList = clientController.getAllData();
 

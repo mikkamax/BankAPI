@@ -8,27 +8,30 @@ import com.mike.bankapi.model.entity.Client;
 import com.mike.bankapi.service.Utils;
 import com.sun.net.httpserver.HttpExchange;
 
-import java.util.List;
 import java.util.Map;
 
 /**
- * !!!ТЕСТОВЫЙ ХЭНДЛЕР!!! После использования, сжечь
- * Обрабатывает GET-запрос на получение всех клиентов, счетов и карт из БД
+ * Хэндлер, обрабатывающий GET-запросы по выводу всей информации о клиенте по его id в БД
  */
-public class ClientsTestAPIHandler extends ClientsBaseHandler {
-    public ClientsTestAPIHandler(ClientController clientController) {
+public class ClientsHandler extends ClientsBaseHandler {
+    public ClientsHandler(ClientController clientController) {
         super(clientController);
     }
 
     @Override
     protected StringBuilder handleGetRequest(HttpExchange exchange, Map<String, String> queryParams, ObjectMapper mapper) throws HandlerException, DAOException {
         try {
+            long incomingLong = Long.parseLong(queryParams.get("client_id"));
             StringBuilder sb = new StringBuilder();
-            List<Client> clientList = clientController.getAllData();
-            sb.append(mapper.writeValueAsString(clientList));
+            Client client = clientController.getAllClientDataById(incomingLong);
+            sb.append(mapper.writeValueAsString(client));
             return sb;
+        } catch (NumberFormatException e) {
+            String error = "Ошибка! Неверные входные данные в запросе";
+            Utils.printMessage(error);
+            throw new HandlerException(error, e);
         } catch (JsonProcessingException e) {
-            String error = "Ошибка при json-сериализации всех пользователей";
+            String error = "Ошибка при json-сериализации карт пользователей";
             Utils.printMessage(error);
             throw new HandlerException(error, e);
         }

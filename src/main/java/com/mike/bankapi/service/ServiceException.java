@@ -1,5 +1,8 @@
 package com.mike.bankapi.service;
 
+/**
+ * Exception-обертка для всех исключений, возникающих в слое Service
+ */
 public class ServiceException extends Exception {
     public ServiceException() {
     }

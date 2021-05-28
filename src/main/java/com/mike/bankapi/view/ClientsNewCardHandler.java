@@ -12,6 +12,9 @@ import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * Хэндлер, обрабатывающий POST-запросы по созданию новой карты/счета
+ */
 public class ClientsNewCardHandler extends ClientsBaseHandler {
     public ClientsNewCardHandler(ClientController clientController) {
         super(clientController);

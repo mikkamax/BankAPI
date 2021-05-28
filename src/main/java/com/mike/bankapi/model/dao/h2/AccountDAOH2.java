@@ -121,6 +121,12 @@ public class AccountDAOH2 implements AccountDAO {
         }
     }
 
+    /**
+     * Парсинг ResultSet для получения Account
+     * @param rs с наведенным на строку указателем
+     * @return объект Account
+     * @throws SQLException
+     */
     private Account getAccountFromResultSet(ResultSet rs) throws SQLException {
         Account account = new Account();
         account.setAccountId(rs.getLong("_id"));

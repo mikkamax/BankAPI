@@ -12,6 +12,9 @@ import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * Хэндлер, обрабатывающий POST-запросы по пополнению счета
+ */
 public class ClientsAddFundsHandler extends ClientsBaseHandler {
     public ClientsAddFundsHandler(ClientController clientController) {
         super(clientController);

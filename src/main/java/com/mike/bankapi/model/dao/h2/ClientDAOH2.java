@@ -86,6 +86,12 @@ public class ClientDAOH2 implements ClientDAO {
         }
     }
 
+    /**
+     * Парсинг ResultSet для получения Client
+     * @param rs с наведенным на строку указателем
+     * @return объект Client
+     * @throws SQLException
+     */
     private Client getClientFromResultSet(ResultSet rs) throws SQLException {
         Client client = new Client();
         client.setClientId(rs.getInt("_id"));
@@ -97,6 +103,12 @@ public class ClientDAOH2 implements ClientDAO {
         return client;
     }
 
+    /**
+     * Парсинг ResultSet для получения Card
+     * @param rs с наведенным на строку указателем
+     * @return объект Card
+     * @throws SQLException
+     */
     private Card getCardFromResultSet(ResultSet rs) throws SQLException {
         Card card = new Card();
         card.setCardId(rs.getLong("_id"));
