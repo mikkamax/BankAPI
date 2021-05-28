@@ -33,6 +33,13 @@ public class ClientsAddFundsHandler extends ClientsBaseHandler {
 
             long accountId = jsonNode.get("account_id").asLong();
             BigDecimal fundsToAdd = new BigDecimal(jsonNode.get("funds").asText());
+
+            if (fundsToAdd.compareTo(new BigDecimal(0)) <= 0) {
+                String error = "Ошибка! Сумма для пополнения должна быть положительной";
+                Utils.printMessage(error);
+                throw new HandlerException(error);
+            }
+
             boolean result = clientController.addFundsToAccount(accountId, fundsToAdd);
             Map<String, String> map = new HashMap<>();
             map.put("result", String.valueOf(result));

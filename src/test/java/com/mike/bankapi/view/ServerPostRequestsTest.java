@@ -84,6 +84,18 @@ public class ServerPostRequestsTest {
     }
 
     @Test
+    public void addFundsFailOnNegativeAmount() throws IOException, DAOException {
+        String url = urlAddFunds;
+        String outgoingRequest = "{\"account_id\":10,\"funds\":-10.00}";
+        JsonNode actual = actualResponse(url, outgoingRequest);
+
+        String expectedString = "{\"error\":\"Ошибка! Сумма для пополнения должна быть положительной\"}";
+        JsonNode expected = mapper.readTree(expectedString);
+
+        Assert.assertEquals(expected, actual);
+    }
+
+    @Test
     public void createNewCard() throws IOException, DAOException {
         String url = urlNewCard;
         String outgoingRequest = "{\"client_id\":10,\"account_id\":-1,\"card_limit\":100.00}";
