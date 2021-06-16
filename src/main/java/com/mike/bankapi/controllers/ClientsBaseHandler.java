@@ -1,9 +1,9 @@
-package com.mike.bankapi.view;
+package com.mike.bankapi.controllers;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
-import com.mike.bankapi.controller.ClientController;
+import com.mike.bankapi.service.ClientService;
 import com.mike.bankapi.model.dao.DAOException;
 import com.mike.bankapi.service.Utils;
 import com.sun.net.httpserver.HttpExchange;
@@ -21,13 +21,13 @@ import java.util.Map;
  * POST-запросы принимаются в формате JSON
  */
 public class ClientsBaseHandler implements HttpHandler {
-    protected ClientController clientController;
+    protected ClientService clientService;
 
     /**
-     * @param clientController - контроллер, через который все СlientsHadler'ы взаимодействуют со слоем ДАО
+     * @param clientService - контроллер, через который все СlientsHadler'ы взаимодействуют со слоем ДАО
      */
-    public ClientsBaseHandler(ClientController clientController) {
-        this.clientController = clientController;
+    public ClientsBaseHandler(ClientService clientService) {
+        this.clientService = clientService;
     }
 
     /**

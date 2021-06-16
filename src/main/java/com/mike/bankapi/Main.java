@@ -1,6 +1,6 @@
 package com.mike.bankapi;
 
-import com.mike.bankapi.controller.ClientController;
+import com.mike.bankapi.service.ClientService;
 import com.mike.bankapi.model.dao.*;
 import com.mike.bankapi.service.HttpWebServer;
 import com.mike.bankapi.service.ServiceException;
@@ -19,11 +19,11 @@ public class Main {
             e.printStackTrace();
         }
 
-        ClientController clientController = new ClientController(daoFactory);
+        ClientService clientService = new ClientService(daoFactory);
 
         HttpWebServer httpWebServer = null;
         try {
-            httpWebServer = new HttpWebServer(clientController);
+            httpWebServer = new HttpWebServer(clientService);
             httpWebServer.start();
         } catch (ServiceException e) {
             Utils.printMessage("Ошибка service-layer");

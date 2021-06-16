@@ -1,9 +1,9 @@
-package com.mike.bankapi.view;
+package com.mike.bankapi.controllers;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
-import com.mike.bankapi.controller.ClientController;
+import com.mike.bankapi.service.ClientService;
 import com.mike.bankapi.model.dao.DAOException;
 import com.mike.bankapi.model.dao.DAOFactory;
 import com.mike.bankapi.service.HttpWebServer;
@@ -23,7 +23,7 @@ public class ServerGetRequestsTest {
     public static String urlCards = urlMain + "/clients/cards/";
     public static String urlBalance = urlMain + "/clients/balance/";
 
-    private static ClientController clientController;
+    private static ClientService clientService;
     private static ObjectMapper mapper;
     private static HttpWebServer httpWebServer;
 
@@ -32,9 +32,9 @@ public class ServerGetRequestsTest {
         DAOFactory daoFactory = DAOFactory.getDAOFactory(DAOFactory.H2_DB);
         daoFactory.initDb();
 
-        clientController = new ClientController(daoFactory);
+        clientService = new ClientService(daoFactory);
 
-        httpWebServer = new HttpWebServer(clientController);
+        httpWebServer = new HttpWebServer(clientService);
         httpWebServer.start();
 
         mapper = new ObjectMapper();

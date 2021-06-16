@@ -1,10 +1,9 @@
-package com.mike.bankapi.controller;
+package com.mike.bankapi.service;
 
 import com.mike.bankapi.model.dao.*;
 import com.mike.bankapi.model.entity.Account;
 import com.mike.bankapi.model.entity.Card;
 import com.mike.bankapi.model.entity.Client;
-import com.mike.bankapi.service.Utils;
 import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -12,20 +11,19 @@ import org.junit.Test;
 import java.math.BigDecimal;
 import java.sql.Date;
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
 import static org.junit.Assert.*;
 
-public class ClientControllerTest {
-    private static ClientController clientController;
+public class ClientServiceTest {
+    private static ClientService clientService;
 
     @BeforeClass
     public static void initDb() throws DAOException {
         DAOFactory daoFactory = DAOFactory.getDAOFactory(DAOFactory.H2_DB);
         daoFactory.initDb();
-        clientController = new ClientController(daoFactory);
+        clientService = new ClientService(daoFactory);
     }
 
     @Test
@@ -41,14 +39,14 @@ public class ClientControllerTest {
         account2.setBalance(new BigDecimal("39076.09"));
 
         List<Account> expectedList = Arrays.asList(account1, account2);
-        List<Account> actualList = clientController.getAllClientAccounts(2);
+        List<Account> actualList = clientService.getAllClientAccounts(2);
 
         Assert.assertEquals(expectedList, actualList);
     }
 
     @Test(expected = DAOException.class)
     public void getAllClientAccountsFailOnClientId() throws DAOException {
-        clientController.getAllClientCards(20);
+        clientService.getAllClientCards(20);
     }
 
     @Test
@@ -79,14 +77,14 @@ public class ClientControllerTest {
         card5.setDailyLimit(new BigDecimal("500.00"));
 
         List<Card> expectedList = Arrays.asList(card1, card2, card3, card4, card5);
-        List<Card> actualList = clientController.getAllClientCards(10);
+        List<Card> actualList = clientService.getAllClientCards(10);
 
         Assert.assertEquals(expectedList, actualList);
     }
 
     @Test(expected = DAOException.class)
     public void getAllClientCardsFailOnClientId() throws DAOException {
-        clientController.getAllClientCards(20);
+        clientService.getAllClientCards(20);
     }
 
     @Test
@@ -96,40 +94,40 @@ public class ClientControllerTest {
         expected.setNumber("40388647900000002618");
         expected.setBalance(new BigDecimal("95432.45"));
 
-        Account actual = clientController.getAccountById(7);
+        Account actual = clientService.getAccountById(7);
 
         Assert.assertEquals(expected, actual);
     }
 
     @Test(expected = DAOException.class)
     public void getAccountByIdFailOnAccountId() throws DAOException {
-        clientController.getAccountById(20);
+        clientService.getAccountById(20);
     }
 
     @Test
     public void getCardById() throws DAOException {
-        clientController.getCardById(5);
+        clientService.getCardById(5);
     }
 
     @Test(expected = DAOException.class)
     public void getCardByIdFailOnCardId() throws DAOException {
-        clientController.getCardById(20);
+        clientService.getCardById(20);
     }
 
     @Test
     public void addFundsToAccount() throws DAOException {
-        Account account = clientController.getAccountById(1);
+        Account account = clientService.getAccountById(1);
         BigDecimal balanceToAdd = new BigDecimal("999.99");
-        clientController.addFundsToAccount(1, balanceToAdd);
+        clientService.addFundsToAccount(1, balanceToAdd);
 
-        Account accountUpdated = clientController.getAccountById(1);
+        Account accountUpdated = clientService.getAccountById(1);
 
         Assert.assertEquals(account.getBalance().add(balanceToAdd), accountUpdated.getBalance());
     }
 
     @Test(expected = DAOException.class)
     public void addFundsToAccountFailOnAccountId() throws DAOException {
-        clientController.addFundsToAccount(20, new BigDecimal("15.00"));
+        clientService.addFundsToAccount(20, new BigDecimal("15.00"));
     }
 
     @Test
@@ -150,61 +148,61 @@ public class ClientControllerTest {
         card3.setDailyLimit(new BigDecimal("500.00"));
 
         List<Card> expectedList = Arrays.asList(card1, card2, card3);
-        List<Card> actualList = clientController.getAllAccountCards(13);
+        List<Card> actualList = clientService.getAllAccountCards(13);
 
         Assert.assertEquals(expectedList, actualList);
     }
 
     @Test(expected = DAOException.class)
     public void getAllAccountCardsFailOnAccountId() throws DAOException {
-        clientController.getAllAccountCards(20);
+        clientService.getAllAccountCards(20);
     }
 
     @Test
     public void createNewAccount() throws DAOException {
-        long newAccountId = clientController.createNewAccount(1);
-        clientController.getAccountById(newAccountId); //если успешно, то без эксепшена
+        long newAccountId = clientService.createNewAccount(1);
+        clientService.getAccountById(newAccountId); //если успешно, то без эксепшена
     }
 
     @Test(expected = DAOException.class)
     public void createNewAccountFailOnClientId() throws DAOException {
-        long newAccountId = clientController.createNewAccount(20);
-        clientController.getAccountById(newAccountId); //должен вылетать эксепшн
+        long newAccountId = clientService.createNewAccount(20);
+        clientService.getAccountById(newAccountId); //должен вылетать эксепшн
     }
 
     @Test
     public void createNewCard() throws DAOException {
-        int oldSize = clientController.getAllAccountCards(1).size();
-        long cardId = clientController.createNewCard(1, 1, new BigDecimal("0.00"));
-        int newSize = clientController.getAllAccountCards(1).size();
+        int oldSize = clientService.getAllAccountCards(1).size();
+        long cardId = clientService.createNewCard(1, 1, new BigDecimal("0.00"));
+        int newSize = clientService.getAllAccountCards(1).size();
         Assert.assertEquals(true, newSize > oldSize);
 
-        clientController.getCardById(cardId);
+        clientService.getCardById(cardId);
     }
 
     @Test
     public void createNewCardAndNewAccount() throws DAOException {
-        long oldAccountSize = clientController.getAllClientAccounts(1).size();
-        long cardId = clientController.createNewCard(1, -1, new BigDecimal("0.00"));
-        int newAccountSize = clientController.getAllClientAccounts(1).size();
+        long oldAccountSize = clientService.getAllClientAccounts(1).size();
+        long cardId = clientService.createNewCard(1, -1, new BigDecimal("0.00"));
+        int newAccountSize = clientService.getAllClientAccounts(1).size();
         Assert.assertEquals(true, newAccountSize > oldAccountSize);
 
-        clientController.getCardById(cardId);
+        clientService.getCardById(cardId);
     }
 
     @Test(expected = DAOException.class)
     public void createNewCardFailOnClientId() throws DAOException {
-        clientController.createNewCard(0, -1, new BigDecimal("0.00"));
+        clientService.createNewCard(0, -1, new BigDecimal("0.00"));
     }
 
     @Test(expected = DAOException.class)
     public void createNewCardFailOnClientIdNotMatchAccountId() throws DAOException {
-        clientController.createNewCard(1, 2, new BigDecimal("0.00"));
+        clientService.createNewCard(1, 2, new BigDecimal("0.00"));
     }
 
     @Test
     public void getAllClientDataById() throws DAOException {
-        Client actualClient = clientController.getAllClientDataById(7);
+        Client actualClient = clientService.getAllClientDataById(7);
 
         Client expectedClient = new Client();
         expectedClient.setLastName("Ситников");
@@ -230,7 +228,7 @@ public class ClientControllerTest {
 
     @Test
     public void getAllData() throws DAOException {
-        List<Client> clientList = clientController.getAllData();
+        List<Client> clientList = clientService.getAllData();
 
         Client client = new Client();
         client.setLastName("Захарова");

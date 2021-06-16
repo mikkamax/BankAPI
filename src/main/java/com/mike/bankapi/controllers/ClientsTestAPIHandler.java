@@ -1,8 +1,8 @@
-package com.mike.bankapi.view;
+package com.mike.bankapi.controllers;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.mike.bankapi.controller.ClientController;
+import com.mike.bankapi.service.ClientService;
 import com.mike.bankapi.model.dao.DAOException;
 import com.mike.bankapi.model.entity.Client;
 import com.mike.bankapi.service.Utils;
@@ -16,15 +16,15 @@ import java.util.Map;
  * Обрабатывает GET-запрос на получение всех клиентов, счетов и карт из БД
  */
 public class ClientsTestAPIHandler extends ClientsBaseHandler {
-    public ClientsTestAPIHandler(ClientController clientController) {
-        super(clientController);
+    public ClientsTestAPIHandler(ClientService clientService) {
+        super(clientService);
     }
 
     @Override
     protected StringBuilder handleGetRequest(HttpExchange exchange, Map<String, String> queryParams, ObjectMapper mapper) throws HandlerException, DAOException {
         try {
             StringBuilder sb = new StringBuilder();
-            List<Client> clientList = clientController.getAllData();
+            List<Client> clientList = clientService.getAllData();
             sb.append(mapper.writeValueAsString(clientList));
             return sb;
         } catch (JsonProcessingException e) {

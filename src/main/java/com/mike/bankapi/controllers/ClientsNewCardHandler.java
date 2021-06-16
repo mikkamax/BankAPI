@@ -1,9 +1,9 @@
-package com.mike.bankapi.view;
+package com.mike.bankapi.controllers;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.mike.bankapi.controller.ClientController;
+import com.mike.bankapi.service.ClientService;
 import com.mike.bankapi.model.dao.DAOException;
 import com.mike.bankapi.service.Utils;
 import com.sun.net.httpserver.HttpExchange;
@@ -16,8 +16,8 @@ import java.util.Map;
  * Хэндлер, обрабатывающий POST-запросы по созданию новой карты/счета
  */
 public class ClientsNewCardHandler extends ClientsBaseHandler {
-    public ClientsNewCardHandler(ClientController clientController) {
-        super(clientController);
+    public ClientsNewCardHandler(ClientService clientService) {
+        super(clientService);
     }
 
     @Override
@@ -34,7 +34,7 @@ public class ClientsNewCardHandler extends ClientsBaseHandler {
             long accountId = jsonNode.get("account_id").asLong();
             BigDecimal limit = new BigDecimal(jsonNode.get("card_limit").asText());
 
-            boolean result = clientController.createNewCard(clientId, accountId, limit) > 0 ? true : false;
+            boolean result = clientService.createNewCard(clientId, accountId, limit) > 0 ? true : false;
 
             Map<String, String> map = new HashMap<>();
             map.put("result", String.valueOf(result));

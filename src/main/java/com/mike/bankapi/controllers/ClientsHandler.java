@@ -1,22 +1,21 @@
-package com.mike.bankapi.view;
+package com.mike.bankapi.controllers;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.mike.bankapi.controller.ClientController;
+import com.mike.bankapi.service.ClientService;
 import com.mike.bankapi.model.dao.DAOException;
-import com.mike.bankapi.model.entity.Card;
+import com.mike.bankapi.model.entity.Client;
 import com.mike.bankapi.service.Utils;
 import com.sun.net.httpserver.HttpExchange;
 
-import java.util.List;
 import java.util.Map;
 
 /**
- * Хэндлер, обрабатывающий GET-запросы по выводу списка всех карт клиента
+ * Хэндлер, обрабатывающий GET-запросы по выводу всей информации о клиенте по его id в БД
  */
-public class ClientsCardsHandler extends ClientsBaseHandler {
-    public ClientsCardsHandler(ClientController clientController) {
-        super(clientController);
+public class ClientsHandler extends ClientsBaseHandler {
+    public ClientsHandler(ClientService clientService) {
+        super(clientService);
     }
 
     @Override
@@ -24,8 +23,8 @@ public class ClientsCardsHandler extends ClientsBaseHandler {
         try {
             long incomingLong = Long.parseLong(queryParams.get("client_id"));
             StringBuilder sb = new StringBuilder();
-            List<Card> cardList = clientController.getAllClientCards(incomingLong);
-            sb.append(mapper.writeValueAsString(cardList));
+            Client client = clientService.getAllClientDataById(incomingLong);
+            sb.append(mapper.writeValueAsString(client));
             return sb;
         } catch (NumberFormatException e) {
             String error = "Ошибка! Неверные входные данные в запросе";

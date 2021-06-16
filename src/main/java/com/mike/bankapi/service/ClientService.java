@@ -1,4 +1,4 @@
-package com.mike.bankapi.controller;
+package com.mike.bankapi.service;
 
 import com.mike.bankapi.model.dao.*;
 import com.mike.bankapi.model.entity.Account;
@@ -13,7 +13,7 @@ import java.util.List;
  * Контроллер служит связующим звеном между запросами HttpServer и слоем ДАО
  */
 
-public class ClientController {
+public class ClientService {
     private final DAOFactory daoFactory;
     private final ClientDAO clientDAO;
     private final AccountDAO accountDAO;
@@ -22,7 +22,7 @@ public class ClientController {
     /**
      * @param daoFactory инстанс конкретной релазации DAOFactory
      */
-    public ClientController(DAOFactory daoFactory) {
+    public ClientService(DAOFactory daoFactory) {
         this.daoFactory = daoFactory;
         clientDAO = daoFactory.getClientDAO();
         accountDAO = daoFactory.getAccountDAO();

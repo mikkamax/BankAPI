@@ -1,4 +1,4 @@
-package com.mike.bankapi.view;
+package com.mike.bankapi.controllers;
 
 /**
  * Exception-обертка для всех исключений, возникающих в слое Handlers/View
