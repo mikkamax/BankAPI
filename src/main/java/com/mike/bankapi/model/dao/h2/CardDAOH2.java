@@ -16,16 +16,20 @@ import java.util.List;
 public class CardDAOH2 implements CardDAO {
     private final DAOFactory daoFactory;
 
+    //sql queries
+    private static final String ADD_NEW_CARD_SQL = "INSERT INTO card (account_id, card_number, daily_limit) VALUES (?, ?, ?);";
+    private static final String GET_ALL_CARDS_BY_ACCOUNT_ID_SQL = "SELECT * FROM card WHERE account_id = ?;";
+    private static final String GET_CARD_BY_ID_SQL = "SELECT * FROM card WHERE _id = ?;";
+    private static final String IS_CARD_EXISTS_SQL = "SELECT COUNT(*) FROM card WHERE card_number = ?;";
+
     public CardDAOH2(DAOFactory daoFactory) {
         this.daoFactory = daoFactory;
     }
 
     @Override
     public long addNewCard(Card card) throws DAOException {
-        String addNewCardSql = "INSERT INTO card (account_id, card_number, daily_limit) VALUES (?, ?, ?);";
-
         try (Connection connection = daoFactory.getConnection();
-             PreparedStatement pStatement = connection.prepareStatement(addNewCardSql, PreparedStatement.RETURN_GENERATED_KEYS)) {
+             PreparedStatement pStatement = connection.prepareStatement(ADD_NEW_CARD_SQL, PreparedStatement.RETURN_GENERATED_KEYS)) {
             pStatement.setLong(1, card.getAccountId());
             pStatement.setString(2, card.getCardNumber());
             pStatement.setBigDecimal(3, card.getDailyLimit());
@@ -43,10 +47,8 @@ public class CardDAOH2 implements CardDAO {
 
     @Override
     public List<Card> getAllCardsByAccountId(long accountId) throws DAOException {
-        String getAllCardsByAccountIdSql = "SELECT * FROM card WHERE account_id = ?;";
-
         try (Connection connection = daoFactory.getConnection();
-             PreparedStatement pStatement = connection.prepareStatement(getAllCardsByAccountIdSql)) {
+             PreparedStatement pStatement = connection.prepareStatement(GET_ALL_CARDS_BY_ACCOUNT_ID_SQL)) {
             pStatement.setLong(1, accountId);
             pStatement.execute();
             ResultSet resultSet = pStatement.getResultSet();
@@ -66,10 +68,8 @@ public class CardDAOH2 implements CardDAO {
 
     @Override
     public Card getCardById(long cardId) throws DAOException {
-        String getCardByIdSql = "SELECT * FROM card WHERE _id = ?;";
-
         try (Connection connection = daoFactory.getConnection();
-             PreparedStatement pStatement = connection.prepareStatement(getCardByIdSql)) {
+             PreparedStatement pStatement = connection.prepareStatement(GET_CARD_BY_ID_SQL)) {
             pStatement.setLong(1, cardId);
             pStatement.execute();
 
@@ -86,10 +86,8 @@ public class CardDAOH2 implements CardDAO {
 
     @Override
     public boolean isCardExists(String number) throws DAOException {
-        String isCardExistsSql = "SELECT COUNT(*) FROM card WHERE card_number = ?;";
-
         try (Connection connection = daoFactory.getConnection();
-             PreparedStatement pStatement = connection.prepareStatement(isCardExistsSql)) {
+             PreparedStatement pStatement = connection.prepareStatement(IS_CARD_EXISTS_SQL)) {
             pStatement.setString(1, number);
             pStatement.execute();
 

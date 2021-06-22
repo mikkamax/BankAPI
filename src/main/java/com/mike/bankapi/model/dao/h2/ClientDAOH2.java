@@ -14,17 +14,23 @@ import java.util.List;
 public class ClientDAOH2 implements ClientDAO {
     private final DAOFactory daoFactory;
 
+    //sql queries
+    private static final String GET_ALL_CLIENTS_SQL = "SELECT * FROM client;";
+    private static final String GET_ALL_CLIENT_CARDS = "SELECT card._id, card.account_id, card.card_number, card.daily_limit " +
+            "FROM card " +
+            "INNER JOIN account ON account._id=card.account_id " +
+            "WHERE account.client_id = ?";
+    private static final String GET_CLIENT_BY_ID_SQL = "SELECT * FROM client WHERE _id = ?;";
+
     public ClientDAOH2(DAOFactory daoFactory) {
         this.daoFactory = daoFactory;
     }
 
     @Override
     public List<Client> getAllClients() throws DAOException {
-        String getAllClientsSql = "SELECT * FROM client;";
-
         try (Connection connection = daoFactory.getConnection();
              Statement statement = connection.createStatement()) {
-            statement.execute(getAllClientsSql);
+            statement.execute(GET_ALL_CLIENTS_SQL);
             ResultSet resultSet = statement.getResultSet();
 
             List<Client> list = new ArrayList<>();
@@ -42,13 +48,8 @@ public class ClientDAOH2 implements ClientDAO {
 
     @Override
     public List<Card> getAllClientCards(long clientId) throws DAOException {
-        String getAllClientCards = "SELECT card._id, card.account_id, card.card_number, card.daily_limit " +
-                "FROM card " +
-                "INNER JOIN account ON account._id=card.account_id " +
-                "WHERE account.client_id = ?";
-
         try (Connection connection = daoFactory.getConnection();
-             PreparedStatement pStatement = connection.prepareStatement(getAllClientCards)) {
+             PreparedStatement pStatement = connection.prepareStatement(GET_ALL_CLIENT_CARDS)) {
             pStatement.setLong(1, clientId);
             pStatement.execute();
 
@@ -68,10 +69,8 @@ public class ClientDAOH2 implements ClientDAO {
 
     @Override
     public Client getClientById(long clientId) throws DAOException {
-        String getClientByIdSql = "SELECT * FROM client WHERE _id = ?;";
-
         try (Connection connection = daoFactory.getConnection();
-             PreparedStatement pStatement = connection.prepareStatement(getClientByIdSql)) {
+             PreparedStatement pStatement = connection.prepareStatement(GET_CLIENT_BY_ID_SQL)) {
             pStatement.setLong(1, clientId);
             pStatement.execute();
 

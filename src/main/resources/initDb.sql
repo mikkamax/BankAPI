@@ -13,15 +13,23 @@ CREATE TABLE account (
     _id BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
     client_id INT NOT NULL,
     number VARCHAR(20) NOT NULL UNIQUE,
-    balance DECIMAL NOT NULL
+    balance DECIMAL NOT NULL,
+    FOREIGN KEY (client_id) REFERENCES client(_id)
 );
 
 CREATE TABLE card (
     _id BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
     account_id INT NOT NULL,
     card_number VARCHAR(16) NOT NULL UNIQUE,
-    daily_limit DECIMAL DEFAULT NULL
+    daily_limit DECIMAL DEFAULT NULL,
+    FOREIGN KEY (account_id) REFERENCES account(_id)
 );
+
+CREATE INDEX clients_last_name_index ON client(last_name);
+CREATE INDEX accounts_client_id_index ON account(client_id);
+CREATE INDEX accounts_number_index ON account(number);
+CREATE INDEX cards_account_id_index ON card(account_id);
+CREATE INDEX cards_number_index ON card(card_number);
 
 INSERT INTO client (last_name, first_name, middle_name, date_of_birth, passport_num) VALUES
 ('Нестеров', 'Ипполит', 'Александрович', '1957-09-23', 4879821667),

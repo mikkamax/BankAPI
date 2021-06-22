@@ -14,16 +14,21 @@ import java.util.List;
 public class AccountDAOH2 implements AccountDAO {
     private final DAOFactory daoFactory;
 
+    //sql queries
+    private static final String ADD_NEW_ACCOUNT_SQL = "INSERT INTO account (client_id, number, balance) VALUES (?, ?, ?);";
+    private static final String GET_ALL_ACCOUNTS_BY_CLIENT_ID_SQL = "SELECT * FROM account WHERE client_id = ?;";
+    private static final String GET_ACCOUNT_BY_ID_SQL = "SELECT * FROM account WHERE _id = ?;";
+    private static final String IS_ACCOUNT_EXISTS_SQL = "SELECT COUNT(*) FROM account WHERE number = ?;";
+    private static final String ADD_FUNDS_SQL = "UPDATE account SET balance = ? WHERE _id = ?";
+
     public AccountDAOH2(DAOFactory daoFactory) {
         this.daoFactory = daoFactory;
     }
 
     @Override
     public long addNewAccount(Account account) throws DAOException {
-        String addNewAccountSql = "INSERT INTO account (client_id, number, balance) VALUES (?, ?, ?);";
-
         try (Connection connection = daoFactory.getConnection();
-             PreparedStatement pStatement = connection.prepareStatement(addNewAccountSql, PreparedStatement.RETURN_GENERATED_KEYS)) {
+             PreparedStatement pStatement = connection.prepareStatement(ADD_NEW_ACCOUNT_SQL, PreparedStatement.RETURN_GENERATED_KEYS)) {
             pStatement.setLong(1, account.getClientId());
             pStatement.setString(2, account.getNumber());
             pStatement.setBigDecimal(3, account.getBalance());
@@ -41,10 +46,8 @@ public class AccountDAOH2 implements AccountDAO {
 
     @Override
     public List<Account> getAllAccountsByClientId(long clientId) throws DAOException {
-        String getAllAccountsByClientIdSql = "SELECT * FROM account WHERE client_id = ?;";
-
         try (Connection connection = daoFactory.getConnection();
-             PreparedStatement pStatement = connection.prepareStatement(getAllAccountsByClientIdSql)) {
+             PreparedStatement pStatement = connection.prepareStatement(GET_ALL_ACCOUNTS_BY_CLIENT_ID_SQL)) {
             pStatement.setLong(1, clientId);
             pStatement.execute();
             ResultSet resultSet = pStatement.getResultSet();
@@ -64,10 +67,8 @@ public class AccountDAOH2 implements AccountDAO {
 
     @Override
     public Account getAccountById(long accountId) throws DAOException {
-        String getAccountByIdSql = "SELECT * FROM account WHERE _id = ?;";
-
         try (Connection connection = daoFactory.getConnection();
-             PreparedStatement pStatement = connection.prepareStatement(getAccountByIdSql)) {
+             PreparedStatement pStatement = connection.prepareStatement(GET_ACCOUNT_BY_ID_SQL)) {
             pStatement.setLong(1, accountId);
             pStatement.execute();
 
@@ -84,10 +85,8 @@ public class AccountDAOH2 implements AccountDAO {
 
     @Override
     public boolean isAccountExists(String number) throws DAOException {
-        String isAccountExistsSql = "SELECT COUNT(*) FROM account WHERE number = ?;";
-
         try (Connection connection = daoFactory.getConnection();
-             PreparedStatement pStatement = connection.prepareStatement(isAccountExistsSql)) {
+             PreparedStatement pStatement = connection.prepareStatement(IS_ACCOUNT_EXISTS_SQL)) {
             pStatement.setString(1, number);
             pStatement.execute();
 
@@ -106,9 +105,8 @@ public class AccountDAOH2 implements AccountDAO {
     public boolean addFundsToAccount(long accountId, BigDecimal funds) throws DAOException {
         Account account = getAccountById(accountId);
 
-        String addFundsSql = "UPDATE account SET balance = ? WHERE _id = ?";
         try (Connection connection = daoFactory.getConnection();
-             PreparedStatement pStatement = connection.prepareStatement(addFundsSql)) {
+             PreparedStatement pStatement = connection.prepareStatement(ADD_FUNDS_SQL)) {
             BigDecimal newBalance = account.getBalance().add(funds);
             pStatement.setBigDecimal(1, newBalance);
             pStatement.setLong(2, accountId);
